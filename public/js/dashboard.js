@@ -292,6 +292,261 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
+// --- Kanban Board ---
+let kanbanVersion = 0;
+let kanbanEnabled = false;
+const KANBAN_COLUMNS = ['idee', 'geplant', 'umsetzung', 'erledigt'];
+
+async function loadKanbanSettings() {
+  const data = await fetchJSON('/api/settings/public');
+  kanbanEnabled = data.kanbanEnabled !== false;
+  const section = document.getElementById('kanbanSection');
+  if (section) section.style.display = kanbanEnabled ? '' : 'none';
+  return kanbanEnabled;
+}
+
+async function loadKanban() {
+  if (!kanbanEnabled) return;
+  try {
+    const data = await fetchJSON('/api/kanban');
+    kanbanVersion = data.version;
+    renderKanban(data.cards);
+  } catch (err) {
+    console.error('Fehler beim Laden des Kanban-Boards:', err);
+  }
+}
+
+function renderKanban(cards) {
+  for (const col of KANBAN_COLUMNS) {
+    const container = document.getElementById('cards-' + col);
+    const colCards = cards.filter(c => c.column === col).sort((a, b) => a.order - b.order);
+    const countEl = document.getElementById('count-' + col);
+    if (countEl) countEl.textContent = colCards.length;
+
+    container.innerHTML = colCards.map(card => `
+      <div class="kanban-card" draggable="true" data-id="${card.id}" data-column="${col}">
+        <span class="kanban-card-text">${escapeHtml(card.title)}</span>
+        <button class="kanban-card-delete" title="Loeschen" data-id="${card.id}">&times;</button>
+      </div>
+    `).join('');
+
+    // Add drag events to cards
+    container.querySelectorAll('.kanban-card').forEach(el => {
+      el.addEventListener('dragstart', kanbanDragStart);
+      el.addEventListener('dragend', kanbanDragEnd);
+    });
+
+    // Double-click to edit
+    container.querySelectorAll('.kanban-card').forEach(el => {
+      el.addEventListener('dblclick', (e) => {
+        e.preventDefault();
+        kanbanStartEdit(el);
+      });
+    });
+
+    // Delete buttons
+    container.querySelectorAll('.kanban-card-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        kanbanDeleteCard(btn.dataset.id);
+      });
+    });
+  }
+}
+
+function kanbanStartEdit(cardEl) {
+  const textEl = cardEl.querySelector('.kanban-card-text');
+  const currentText = textEl.textContent;
+  const cardId = cardEl.dataset.id;
+
+  // Prevent dragging while editing
+  cardEl.setAttribute('draggable', 'false');
+  cardEl.classList.add('kanban-editing');
+
+  // Replace text with input
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'kanban-edit-input';
+  input.value = currentText;
+  input.maxLength = 200;
+  textEl.replaceWith(input);
+  input.focus();
+  input.select();
+
+  let saved = false;
+
+  async function saveEdit() {
+    if (saved) return;
+    saved = true;
+    const newTitle = input.value.trim();
+    if (newTitle && newTitle !== currentText) {
+      try {
+        const res = await fetch(`/api/kanban/cards/${cardId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title: newTitle, version: kanbanVersion })
+        });
+        const result = await res.json();
+        if (res.ok) kanbanVersion = result.version;
+      } catch (err) {
+        console.error('Fehler beim Bearbeiten:', err);
+      }
+    }
+    loadKanban();
+  }
+
+  function cancelEdit() {
+    if (saved) return;
+    saved = true;
+    loadKanban();
+  }
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
+    if (e.key === 'Escape') { e.preventDefault(); cancelEdit(); }
+  });
+
+  input.addEventListener('blur', saveEdit);
+}
+
+// Drag & Drop
+let draggedCard = null;
+
+function kanbanDragStart(e) {
+  draggedCard = e.target.closest('.kanban-card');
+  draggedCard.classList.add('kanban-dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', draggedCard.dataset.id);
+}
+
+function kanbanDragEnd(e) {
+  if (draggedCard) draggedCard.classList.remove('kanban-dragging');
+  draggedCard = null;
+  document.querySelectorAll('.kanban-column').forEach(c => c.classList.remove('kanban-drop-target'));
+}
+
+function initKanbanDropZones() {
+  document.querySelectorAll('.kanban-cards').forEach(zone => {
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      zone.closest('.kanban-column').classList.add('kanban-drop-target');
+
+      // Insert placeholder position
+      const afterEl = getDragAfterElement(zone, e.clientY);
+      if (draggedCard) {
+        if (afterEl) {
+          zone.insertBefore(draggedCard, afterEl);
+        } else {
+          zone.appendChild(draggedCard);
+        }
+      }
+    });
+
+    zone.addEventListener('dragleave', (e) => {
+      if (!zone.contains(e.relatedTarget)) {
+        zone.closest('.kanban-column').classList.remove('kanban-drop-target');
+      }
+    });
+
+    zone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      zone.closest('.kanban-column').classList.remove('kanban-drop-target');
+      const cardId = e.dataTransfer.getData('text/plain');
+      const newColumn = zone.closest('.kanban-column').dataset.column;
+
+      // Compute new order from DOM position
+      const cards = [...zone.querySelectorAll('.kanban-card')];
+      const newOrder = cards.findIndex(c => c.dataset.id === cardId);
+
+      try {
+        const res = await fetch(`/api/kanban/cards/${cardId}/move`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ column: newColumn, order: newOrder, version: kanbanVersion })
+        });
+        const result = await res.json();
+        if (res.status === 409) {
+          // Conflict — reload board
+          loadKanban();
+          return;
+        }
+        if (res.ok) kanbanVersion = result.version;
+        loadKanban();
+      } catch (err) {
+        console.error('Fehler beim Verschieben:', err);
+        loadKanban();
+      }
+    });
+  });
+}
+
+function getDragAfterElement(container, y) {
+  const els = [...container.querySelectorAll('.kanban-card:not(.kanban-dragging)')];
+  let closest = null;
+  let closestOffset = Number.NEGATIVE_INFINITY;
+  for (const el of els) {
+    const box = el.getBoundingClientRect();
+    const offset = y - box.top - box.height / 2;
+    if (offset < 0 && offset > closestOffset) {
+      closestOffset = offset;
+      closest = el;
+    }
+  }
+  return closest;
+}
+
+async function kanbanAddCard(column, title) {
+  if (!title.trim()) return;
+  try {
+    const res = await fetch('/api/kanban/cards', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: title.trim(), column, version: kanbanVersion })
+    });
+    const result = await res.json();
+    if (res.status === 409) {
+      loadKanban();
+      return;
+    }
+    if (res.ok) kanbanVersion = result.version;
+    loadKanban();
+  } catch (err) {
+    console.error('Fehler beim Hinzufuegen:', err);
+    loadKanban();
+  }
+}
+
+async function kanbanDeleteCard(cardId) {
+  if (!confirm('Karte wirklich loeschen?')) return;
+  try {
+    const res = await fetch(`/api/kanban/cards/${cardId}?version=${kanbanVersion}`, { method: 'DELETE' });
+    const result = await res.json();
+    if (res.status === 409) {
+      loadKanban();
+      return;
+    }
+    if (res.ok) kanbanVersion = result.version;
+    loadKanban();
+  } catch (err) {
+    console.error('Fehler beim Loeschen:', err);
+    loadKanban();
+  }
+}
+
+function initKanbanInputs() {
+  for (const col of KANBAN_COLUMNS) {
+    const input = document.getElementById('add-' + col);
+    if (!input) continue;
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        kanbanAddCard(col, input.value);
+        input.value = '';
+      }
+    });
+  }
+}
+
 // --- Load everything ---
 async function loadAll() {
   try {
@@ -300,7 +555,8 @@ async function loadAll() {
       fetchJSON('/api/links'),
       fetchJSON('/api/staff'),
       fetchJSON('/api/vacations'),
-      fetchJSON('/api/coverage')
+      fetchJSON('/api/coverage'),
+      loadKanbanSettings()
     ]);
     renderTiles(tiles);
     renderLinks(links);
@@ -308,6 +564,7 @@ async function loadAll() {
     renderVacation(vacations);
     renderCoverage(coverage);
     loadMoodSummary();
+    loadKanban();
   } catch (err) {
     console.error('Fehler beim Laden:', err);
   }
@@ -338,6 +595,8 @@ document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
 // --- Init ---
 initTheme();
 initMoodWidget();
+initKanbanDropZones();
+initKanbanInputs();
 updateClock();
 setInterval(updateClock, 10000);
 loadSettings();

@@ -35,10 +35,57 @@
       <div id="linksContainer"></div>
     </aside>
 
-    <!-- Center: Tiles -->
+    <!-- Center: Tiles + Kanban -->
     <main class="content">
       <h2 class="section-title">Programme</h2>
       <div class="tiles-grid" id="tilesContainer"></div>
+
+      <!-- Kanban Board -->
+      <div id="kanbanSection" style="display:none;">
+        <h2 class="section-title kanban-title">Kanban-Board</h2>
+        <div class="kanban-board" id="kanbanBoard">
+          <div class="kanban-column" data-column="idee">
+            <div class="kanban-column-header kanban-col-idee">
+              <span>&#128161; Idee</span>
+              <span class="kanban-count" id="count-idee">0</span>
+            </div>
+            <div class="kanban-cards" id="cards-idee"></div>
+            <div class="kanban-add">
+              <input type="text" class="kanban-add-input" id="add-idee" placeholder="Neue Idee..." maxlength="200">
+            </div>
+          </div>
+          <div class="kanban-column" data-column="geplant">
+            <div class="kanban-column-header kanban-col-geplant">
+              <span>&#128197; Geplant</span>
+              <span class="kanban-count" id="count-geplant">0</span>
+            </div>
+            <div class="kanban-cards" id="cards-geplant"></div>
+            <div class="kanban-add">
+              <input type="text" class="kanban-add-input" id="add-geplant" placeholder="Neuer Eintrag..." maxlength="200">
+            </div>
+          </div>
+          <div class="kanban-column" data-column="umsetzung">
+            <div class="kanban-column-header kanban-col-umsetzung">
+              <span>&#9881;&#65039; In Umsetzung</span>
+              <span class="kanban-count" id="count-umsetzung">0</span>
+            </div>
+            <div class="kanban-cards" id="cards-umsetzung"></div>
+            <div class="kanban-add">
+              <input type="text" class="kanban-add-input" id="add-umsetzung" placeholder="Neuer Eintrag..." maxlength="200">
+            </div>
+          </div>
+          <div class="kanban-column" data-column="erledigt">
+            <div class="kanban-column-header kanban-col-erledigt">
+              <span>&#10004;&#65039; Erledigt</span>
+              <span class="kanban-count" id="count-erledigt">0</span>
+            </div>
+            <div class="kanban-cards" id="cards-erledigt"></div>
+            <div class="kanban-add">
+              <input type="text" class="kanban-add-input" id="add-erledigt" placeholder="Neuer Eintrag..." maxlength="200">
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
 
     <!-- Right Sidebar: Widgets -->

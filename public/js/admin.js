@@ -540,13 +540,15 @@ const Admin = {
     const data = await Admin.api('/api/settings');
     document.getElementById('settPraxisName').value = data.praxisName || '';
     document.getElementById('settPraxisSubtitle').value = data.praxisSubtitle || '';
+    document.getElementById('settKanbanEnabled').checked = data.kanbanEnabled !== false;
   },
 
   async saveSettings(e) {
     e.preventDefault();
     await Admin.api('/api/settings', 'PUT', {
       praxisName: document.getElementById('settPraxisName').value,
-      praxisSubtitle: document.getElementById('settPraxisSubtitle').value
+      praxisSubtitle: document.getElementById('settPraxisSubtitle').value,
+      kanbanEnabled: document.getElementById('settKanbanEnabled').checked
     });
     alert('Einstellungen gespeichert!');
   },

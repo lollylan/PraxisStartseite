@@ -112,7 +112,7 @@ router.post('/moods', (req, res) => {
 
 router.get('/settings/public', (req, res) => {
   const s = readJSON('settings.json');
-  res.json({ praxisName: s.praxisName, praxisSubtitle: s.praxisSubtitle });
+  res.json({ praxisName: s.praxisName, praxisSubtitle: s.praxisSubtitle, kanbanEnabled: s.kanbanEnabled !== false });
 });
 
 // ============================
@@ -309,7 +309,8 @@ router.get('/settings', requireAuth, (req, res) => {
     praxisName: s.praxisName,
     praxisSubtitle: s.praxisSubtitle,
     serverPort: s.serverPort,
-    defaultPassword: !!s.defaultPassword
+    defaultPassword: !!s.defaultPassword,
+    kanbanEnabled: s.kanbanEnabled !== false
   });
 });
 
@@ -317,8 +318,105 @@ router.put('/settings', requireAuth, (req, res) => {
   const s = readJSON('settings.json');
   if (req.body.praxisName !== undefined) s.praxisName = req.body.praxisName;
   if (req.body.praxisSubtitle !== undefined) s.praxisSubtitle = req.body.praxisSubtitle;
+  if (req.body.kanbanEnabled !== undefined) s.kanbanEnabled = !!req.body.kanbanEnabled;
   writeJSON('settings.json', s);
   res.json({ ok: true });
+});
+
+// ============================
+// KANBAN BOARD (public read, public write with optimistic locking)
+// ============================
+
+router.get('/kanban', (req, res) => {
+  res.json(readJSON('kanban.json'));
+});
+
+// Add a new card
+router.post('/kanban/cards', (req, res) => {
+  const data = readJSON('kanban.json');
+  const { title, column, version } = req.body;
+  if (!title || !column) {
+    return res.status(400).json({ error: 'Titel und Spalte sind Pflichtfelder' });
+  }
+  if (version !== undefined && version !== data.version) {
+    return res.status(409).json({ error: 'Konflikt: Board wurde zwischenzeitlich geaendert', currentVersion: data.version });
+  }
+  const card = {
+    id: generateId('kb'),
+    title: title.trim().slice(0, 200),
+    column,
+    order: data.cards.filter(c => c.column === column).length,
+    createdAt: new Date().toISOString()
+  };
+  data.cards.push(card);
+  data.version++;
+  writeJSON('kanban.json', data);
+  res.json({ card, version: data.version });
+});
+
+// Move a card (change column and/or order)
+router.put('/kanban/cards/:id/move', (req, res) => {
+  const data = readJSON('kanban.json');
+  const { column, order, version } = req.body;
+  if (version !== undefined && version !== data.version) {
+    return res.status(409).json({ error: 'Konflikt: Board wurde zwischenzeitlich geaendert', currentVersion: data.version });
+  }
+  const card = data.cards.find(c => c.id === req.params.id);
+  if (!card) return res.status(404).json({ error: 'Karte nicht gefunden' });
+
+  const oldColumn = card.column;
+  card.column = column || card.column;
+
+  // Reorder cards in target column
+  const targetCards = data.cards
+    .filter(c => c.column === card.column && c.id !== card.id)
+    .sort((a, b) => a.order - b.order);
+
+  const insertAt = Math.min(order ?? targetCards.length, targetCards.length);
+  targetCards.splice(insertAt, 0, card);
+  targetCards.forEach((c, i) => { c.order = i; });
+
+  // Reorder old column if card moved between columns
+  if (oldColumn !== card.column) {
+    const oldCards = data.cards
+      .filter(c => c.column === oldColumn)
+      .sort((a, b) => a.order - b.order);
+    oldCards.forEach((c, i) => { c.order = i; });
+  }
+
+  data.version++;
+  writeJSON('kanban.json', data);
+  res.json({ version: data.version });
+});
+
+// Update card title
+router.put('/kanban/cards/:id', (req, res) => {
+  const data = readJSON('kanban.json');
+  const { title, version } = req.body;
+  if (version !== undefined && version !== data.version) {
+    return res.status(409).json({ error: 'Konflikt: Board wurde zwischenzeitlich geaendert', currentVersion: data.version });
+  }
+  const card = data.cards.find(c => c.id === req.params.id);
+  if (!card) return res.status(404).json({ error: 'Karte nicht gefunden' });
+  if (title !== undefined) card.title = title.trim().slice(0, 200);
+  data.version++;
+  writeJSON('kanban.json', data);
+  res.json({ card, version: data.version });
+});
+
+// Delete a card
+router.delete('/kanban/cards/:id', (req, res) => {
+  const data = readJSON('kanban.json');
+  const version = parseInt(req.query.version);
+  if (!isNaN(version) && version !== data.version) {
+    return res.status(409).json({ error: 'Konflikt: Board wurde zwischenzeitlich geaendert', currentVersion: data.version });
+  }
+  const idx = data.cards.findIndex(c => c.id === req.params.id);
+  if (idx === -1) return res.status(404).json({ error: 'Karte nicht gefunden' });
+  data.cards.splice(idx, 1);
+  data.version++;
+  writeJSON('kanban.json', data);
+  res.json({ ok: true, version: data.version });
 });
 
 module.exports = router;
