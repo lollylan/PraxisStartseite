@@ -44,6 +44,31 @@
     <!-- Right Sidebar: Widgets -->
     <aside class="sidebar sidebar-right">
 
+      <div class="widget" id="moodWidget">
+        <h3 class="widget-title">&#128522; Stimmungsbarometer</h3>
+        <div class="widget-body">
+          <div class="mood-input" id="moodInput">
+            <div class="mood-input-area">
+              <div class="mood-buttons">
+                <button class="mood-btn mood-bad-btn" data-mood="1" title="Schlecht">&#128544;</button>
+                <button class="mood-btn mood-ok-btn" data-mood="2" title="Neutral">&#128528;</button>
+                <button class="mood-btn mood-good-btn" data-mood="3" title="Gut">&#128522;</button>
+              </div>
+              <div class="mood-comment-area" id="moodCommentArea" style="display:none;">
+                <input type="text" class="mood-comment" id="moodComment" placeholder="Kommentar (optional)..." maxlength="500">
+                <button class="mood-submit" id="moodSubmit">Absenden</button>
+              </div>
+            </div>
+            <div class="mood-success" id="moodSuccess" style="display:none;">Danke! &#10004;</div>
+          </div>
+          <div class="mood-summary" id="moodSummary">
+            <div class="mood-avg" id="moodAvg"></div>
+            <div class="mood-count" id="moodCount"></div>
+          </div>
+          <a href="/mood-stats.html" class="mood-stats-link">&#128202; Statistik anzeigen</a>
+        </div>
+      </div>
+
       <div class="widget" id="vacationWidget">
         <h3 class="widget-title">&#127796; Urlaub</h3>
         <div class="widget-body" id="vacationBody">Laden...</div>

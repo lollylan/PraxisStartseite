@@ -192,6 +192,86 @@ function renderCoverage(data) {
   }).join('');
 }
 
+// --- Mood Barometer ---
+let selectedMood = null;
+
+function initMoodWidget() {
+  const buttons = document.querySelectorAll('.mood-btn');
+  const commentArea = document.getElementById('moodCommentArea');
+  const submitBtn = document.getElementById('moodSubmit');
+  const commentInput = document.getElementById('moodComment');
+  const successMsg = document.getElementById('moodSuccess');
+
+  buttons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      buttons.forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMood = parseInt(btn.dataset.mood);
+      commentArea.style.display = 'flex';
+      successMsg.style.display = 'none';
+      commentInput.focus();
+    });
+  });
+
+  // Submit on Enter in comment field
+  commentInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') submitMood();
+  });
+
+  submitBtn.addEventListener('click', submitMood);
+}
+
+async function submitMood() {
+  if (!selectedMood) return;
+  const comment = document.getElementById('moodComment').value.trim();
+  try {
+    await fetch('/api/moods', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mood: selectedMood, comment })
+    });
+
+    // Reset UI
+    document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+    document.getElementById('moodCommentArea').style.display = 'none';
+    document.getElementById('moodComment').value = '';
+    selectedMood = null;
+
+    // Show success
+    const successMsg = document.getElementById('moodSuccess');
+    successMsg.style.display = 'block';
+    setTimeout(() => { successMsg.style.display = 'none'; }, 2000);
+
+    // Reload summary
+    loadMoodSummary();
+  } catch (err) {
+    console.error('Fehler beim Speichern der Stimmung:', err);
+  }
+}
+
+async function loadMoodSummary() {
+  const today = new Date().toISOString().slice(0, 10);
+  try {
+    const moods = await fetchJSON(`/api/moods?from=${today}&to=${today}`);
+    const avgEl = document.getElementById('moodAvg');
+    const countEl = document.getElementById('moodCount');
+
+    if (moods.length === 0) {
+      avgEl.textContent = 'Noch keine Eintr\u00e4ge heute';
+      countEl.textContent = '';
+      return;
+    }
+
+    const avg = moods.reduce((s, m) => s + m.mood, 0) / moods.length;
+    const score10 = ((avg - 1) / 2 * 10).toFixed(1);
+    const emoji = avg >= 2.5 ? '\ud83d\ude0a' : avg >= 1.5 ? '\ud83d\ude10' : '\ud83d\ude21';
+    avgEl.textContent = `${emoji} ${score10} / 10`;
+    countEl.textContent = `Heute: ${moods.length} Eintr\u00e4ge`;
+  } catch (err) {
+    console.error('Fehler beim Laden der Stimmung:', err);
+  }
+}
+
 // --- Settings ---
 async function loadSettings() {
   const data = await fetchJSON('/api/settings/public');
@@ -227,6 +307,7 @@ async function loadAll() {
     renderBirthdays(staff);
     renderVacation(vacations);
     renderCoverage(coverage);
+    loadMoodSummary();
   } catch (err) {
     console.error('Fehler beim Laden:', err);
   }
@@ -256,6 +337,7 @@ document.getElementById('themeToggle')?.addEventListener('click', toggleTheme);
 
 // --- Init ---
 initTheme();
+initMoodWidget();
 updateClock();
 setInterval(updateClock, 10000);
 loadSettings();

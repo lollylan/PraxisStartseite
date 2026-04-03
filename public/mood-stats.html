@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stimmungsbarometer — Statistik</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/mood-stats.css">
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-left">
+      <a href="/" class="back-link" title="Zurueck zum Dashboard">&#8592;</a>
+      <div>
+        <h1 class="header-title">&#128202; Stimmungsbarometer</h1>
+        <p class="header-subtitle">Statistik &amp; Kalender</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <button class="theme-toggle" id="themeToggle" title="Tag/Nacht-Modus">&#9790;</button>
+    </div>
+  </header>
+
+  <div class="stats-layout">
+
+    <!-- Month overview -->
+    <section class="stats-section">
+      <div class="month-nav">
+        <button class="month-btn" id="prevMonth">&#9664;</button>
+        <h2 class="month-title" id="monthTitle"></h2>
+        <button class="month-btn" id="nextMonth">&#9654;</button>
+      </div>
+
+      <div class="month-summary" id="monthSummary"></div>
+
+      <div class="calendar" id="calendar"></div>
+    </section>
+
+    <!-- Day detail -->
+    <section class="stats-section" id="dayDetail" style="display:none;">
+      <h2 class="detail-title" id="dayDetailTitle"></h2>
+      <div id="dayDetailBody"></div>
+    </section>
+
+    <!-- Recent comments -->
+    <section class="stats-section">
+      <h2 class="section-heading">Letzte Kommentare</h2>
+      <div id="recentComments"></div>
+    </section>
+
+  </div>
+
+  <script src="/js/mood-stats.js"></script>
+</body>
+</html>

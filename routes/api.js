@@ -77,6 +77,39 @@ router.get('/coverage', (req, res) => {
   res.json(readJSON('coverage.json'));
 });
 
+router.get('/moods', (req, res) => {
+  let moods = readJSON('moods.json');
+  const { from, to } = req.query;
+  if (from) {
+    const fromDate = new Date(from);
+    moods = moods.filter(m => new Date(m.timestamp) >= fromDate);
+  }
+  if (to) {
+    const toDate = new Date(to);
+    toDate.setHours(23, 59, 59, 999);
+    moods = moods.filter(m => new Date(m.timestamp) <= toDate);
+  }
+  res.json(moods);
+});
+
+// Post mood (no auth — MFAs use this without login)
+router.post('/moods', (req, res) => {
+  const { mood, comment } = req.body;
+  if (![1, 2, 3].includes(mood)) {
+    return res.status(400).json({ error: 'Mood muss 1, 2 oder 3 sein' });
+  }
+  const moods = readJSON('moods.json');
+  const entry = {
+    id: generateId('mood'),
+    mood,
+    comment: typeof comment === 'string' ? comment.trim().slice(0, 500) : '',
+    timestamp: new Date().toISOString()
+  };
+  moods.push(entry);
+  writeJSON('moods.json', moods);
+  res.json(entry);
+});
+
 router.get('/settings/public', (req, res) => {
   const s = readJSON('settings.json');
   res.json({ praxisName: s.praxisName, praxisSubtitle: s.praxisSubtitle });
