@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Praxis-Startseite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+</head>
+<body>
+
+  <!-- Login -->
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <div class="login-icon">&#9881;&#65039;</div>
+      <h1>Admin-Bereich</h1>
+      <p>Passwort eingeben, um Einstellungen zu bearbeiten.</p>
+      <form id="loginForm">
+        <input type="password" id="loginPassword" placeholder="Passwort" autofocus required>
+        <button type="submit">Anmelden</button>
+        <p class="error" id="loginError"></p>
+      </form>
+      <a href="/" class="back-link">&larr; Zurueck zur Startseite</a>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="admin-panel" style="display:none;">
+    <header class="admin-header">
+      <div class="admin-header-left">
+        <a href="/" class="back-btn">&larr; Startseite</a>
+        <h1>Admin-Bereich</h1>
+      </div>
+      <button id="logoutBtn" class="logout-btn">Abmelden</button>
+    </header>
+
+    <!-- Tabs -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="tiles">Kacheln</button>
+      <button class="tab" data-tab="links">Links</button>
+      <button class="tab" data-tab="staff">Geburtstage</button>
+      <button class="tab" data-tab="vacations">Urlaub</button>
+      <button class="tab" data-tab="coverage">Vertretungen</button>
+      <button class="tab" data-tab="settings">Einstellungen</button>
+    </nav>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+
+      <!-- Tiles Tab -->
+      <section id="tab-tiles" class="tab-pane active">
+        <div class="pane-header">
+          <h2>Programm-Kacheln</h2>
+          <button class="btn-add" onclick="Admin.showTileForm()">+ Hinzufuegen</button>
+        </div>
+        <div id="tileForm" class="edit-form" style="display:none;"></div>
+        <div id="tilesList" class="items-list"></div>
+      </section>
+
+      <!-- Links Tab -->
+      <section id="tab-links" class="tab-pane">
+        <div class="pane-header">
+          <h2>Schnelllinks</h2>
+          <button class="btn-add" onclick="Admin.showCategoryForm()">+ Kategorie</button>
+        </div>
+        <div id="categoryForm" class="edit-form" style="display:none;"></div>
+        <div id="linksList" class="items-list"></div>
+      </section>
+
+      <!-- Staff Tab -->
+      <section id="tab-staff" class="tab-pane">
+        <div class="pane-header">
+          <h2>Mitarbeiter / Geburtstage</h2>
+          <button class="btn-add" onclick="Admin.showStaffForm()">+ Hinzufuegen</button>
+        </div>
+        <div id="staffForm" class="edit-form" style="display:none;"></div>
+        <div id="staffList" class="items-list"></div>
+      </section>
+
+      <!-- Vacations Tab -->
+      <section id="tab-vacations" class="tab-pane">
+        <div class="pane-header">
+          <h2>Urlaub</h2>
+          <button class="btn-add" onclick="Admin.showVacationForm()">+ Hinzufuegen</button>
+        </div>
+        <div id="vacationForm" class="edit-form" style="display:none;"></div>
+        <div id="vacationsList" class="items-list"></div>
+      </section>
+
+      <!-- Coverage Tab -->
+      <section id="tab-coverage" class="tab-pane">
+        <div class="pane-header">
+          <h2>Vertretungen</h2>
+          <button class="btn-add" onclick="Admin.showCoverageForm()">+ Hinzufuegen</button>
+        </div>
+        <div id="coverageForm" class="edit-form" style="display:none;"></div>
+        <div id="coverageList" class="items-list"></div>
+      </section>
+
+      <!-- Settings Tab -->
+      <section id="tab-settings" class="tab-pane">
+        <h2>Einstellungen</h2>
+        <div class="settings-section">
+          <h3>Praxis-Daten</h3>
+          <form id="settingsForm" class="settings-form">
+            <label>Praxisname<input type="text" id="settPraxisName"></label>
+            <label>Untertitel<input type="text" id="settPraxisSubtitle"></label>
+            <button type="submit" class="btn-save">Speichern</button>
+          </form>
+        </div>
+        <div class="settings-section">
+          <h3>Passwort aendern</h3>
+          <form id="passwordForm" class="settings-form">
+            <label>Aktuelles Passwort<input type="password" id="pwCurrent"></label>
+            <label>Neues Passwort<input type="password" id="pwNew"></label>
+            <label>Neues Passwort wiederholen<input type="password" id="pwConfirm"></label>
+            <button type="submit" class="btn-save">Passwort aendern</button>
+            <p class="error" id="pwError"></p>
+            <p class="success" id="pwSuccess"></p>
+          </form>
+        </div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="/js/admin.js"></script>
+</body>
+</html>

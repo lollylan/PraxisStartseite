@@ -1,0 +1,453 @@
+/* === Praxis-Startseite — Corporate Identity === */
+
+:root {
+  /* Praxis CI Farben — Petrolblau & Kupfer-Orange */
+  --primary: #025669;
+  --primary-light: #03758F;
+  --primary-dark: #013D4B;
+  --accent: #BB4E26;
+  --accent-light: #D4713F;
+  --accent-dark: #8E3A1B;
+  --bg: #FAFBFC;
+  --surface: #ffffff;
+  --surface-hover: #FDF8F5;
+  --text: #1C2833;
+  --text-muted: #566573;
+  --border: #dce1e8;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  --radius: 12px;
+  --radius-sm: 8px;
+  --header-bg: var(--primary);
+  --header-text: #ffffff;
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --primary: #03758F;
+  --primary-light: #04a0c4;
+  --primary-dark: #025669;
+  --accent: #D4713F;
+  --accent-light: #e8956a;
+  --accent-dark: #BB4E26;
+  --bg: #0f1923;
+  --surface: #1a2a36;
+  --surface-hover: #223442;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #2d3f4e;
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --header-bg: #013D4B;
+  --header-text: #e2e8f0;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* === Header === */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 28px;
+  background: var(--header-bg);
+  color: var(--header-text);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.header-logo {
+  font-size: 2rem;
+}
+
+.header-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.header-subtitle {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  font-weight: 400;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.clock {
+  font-size: 0.95rem;
+  font-weight: 500;
+  opacity: 0.9;
+  font-variant-numeric: tabular-nums;
+}
+
+.admin-link {
+  font-size: 1.4rem;
+  text-decoration: none;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.admin-link:hover {
+  opacity: 1;
+}
+
+/* Theme Toggle */
+.theme-toggle {
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: var(--header-text);
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background 0.2s;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* === Main Layout === */
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr 300px;
+  gap: 24px;
+  padding: 24px 28px;
+  max-width: 1600px;
+  margin: 0 auto;
+  min-height: calc(100vh - 80px);
+}
+
+/* === Sidebars === */
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sidebar-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+}
+
+/* Link categories */
+
+.link-category {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.link-category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text);
+  user-select: none;
+  transition: background 0.15s;
+}
+
+.link-category-header:hover {
+  background: var(--surface-hover);
+}
+
+.link-category-header .arrow {
+  margin-left: auto;
+  font-size: 0.7rem;
+  transition: transform 0.2s;
+  color: var(--text-muted);
+}
+
+.link-category.open .arrow {
+  transform: rotate(90deg);
+}
+
+.link-category-body {
+  display: none;
+  padding: 4px 14px 10px;
+}
+
+.link-category.open .link-category-body {
+  display: block;
+}
+
+.link-category-body a {
+  display: block;
+  padding: 5px 0;
+  color: var(--primary-light);
+  text-decoration: none;
+  font-size: 0.84rem;
+  transition: color 0.15s;
+}
+
+.link-category-body a:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+/* === Tiles === */
+
+.content {
+  min-width: 0;
+}
+
+.section-title {
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent);
+  margin-bottom: 16px;
+}
+
+.tiles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+  gap: 16px;
+}
+
+.tile {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+  text-decoration: none;
+  color: var(--text);
+  transition: transform 0.15s, box-shadow 0.15s, border-color 0.15s;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.tile::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--tile-color, var(--primary));
+}
+
+.tile:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow);
+  border-color: var(--tile-color, var(--primary));
+}
+
+.tile-icon {
+  font-size: 2.2rem;
+  line-height: 1;
+}
+
+.tile-title {
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.tile-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* === Widgets === */
+
+.widget {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.widget-title {
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 16px;
+  background: var(--surface-hover);
+  border-bottom: 1px solid var(--border);
+}
+
+.widget-body {
+  padding: 14px 16px;
+  font-size: 0.88rem;
+  line-height: 1.6;
+}
+
+/* Vacation widget */
+.vacation-countdown {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.vacation-days {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--primary);
+  line-height: 1.1;
+}
+
+.vacation-label {
+  font-size: 0.92rem;
+  color: var(--text);
+  margin-top: 4px;
+}
+
+.vacation-dates {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.vacation-active {
+  color: var(--accent);
+}
+
+.vacation-active .vacation-days {
+  color: var(--accent);
+}
+
+/* Birthday entries */
+.birthday-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.birthday-entry:last-child {
+  border-bottom: none;
+}
+
+.birthday-name {
+  font-weight: 500;
+}
+
+.birthday-role {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.birthday-days {
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+.birthday-today {
+  background: var(--surface-hover);
+  margin: -6px -16px;
+  padding: 6px 16px;
+  border-radius: 4px;
+}
+
+.birthday-today .birthday-days {
+  color: var(--accent);
+}
+
+/* Coverage entries */
+.coverage-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.coverage-entry:last-child {
+  border-bottom: none;
+}
+
+.coverage-date {
+  font-weight: 600;
+  font-size: 0.84rem;
+  color: var(--primary);
+}
+
+.coverage-name {
+  font-size: 0.88rem;
+}
+
+.coverage-details {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* Empty state */
+.empty-state {
+  color: var(--text-muted);
+  font-style: italic;
+  text-align: center;
+  padding: 8px 0;
+}
+
+/* === Responsive === */
+
+@media (max-width: 1200px) {
+  .main-layout {
+    grid-template-columns: 200px 1fr 260px;
+    gap: 16px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 900px) {
+  .main-layout {
+    grid-template-columns: 1fr;
+  }
+  .sidebar-left {
+    order: 2;
+  }
+  .content {
+    order: 1;
+  }
+  .sidebar-right {
+    order: 3;
+  }
+}

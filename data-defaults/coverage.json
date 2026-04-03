@@ -1,0 +1,40 @@
+{
+  "coverages": [
+    {
+      "id": "cov-1",
+      "colleagueName": "Dr. Meier",
+      "practiceName": "Praxis Meier",
+      "date": "2026-04-12",
+      "endDate": "",
+      "type": "ganztags",
+      "halfDay": "",
+      "startTime": "",
+      "endTime": "",
+      "notes": "Tel: 0931/12345"
+    },
+    {
+      "id": "cov-2",
+      "colleagueName": "Dr. Fischer",
+      "practiceName": "Praxis Fischer",
+      "date": "2026-05-01",
+      "endDate": "2026-05-03",
+      "type": "ganztags",
+      "halfDay": "",
+      "startTime": "",
+      "endTime": "",
+      "notes": ""
+    },
+    {
+      "id": "cov-3",
+      "colleagueName": "Dr. Wagner",
+      "practiceName": "Praxis Wagner",
+      "date": "2026-05-15",
+      "endDate": "",
+      "type": "zeitraum",
+      "halfDay": "",
+      "startTime": "14:00",
+      "endTime": "18:00",
+      "notes": "Tel: 0931/98765"
+    }
+  ]
+}

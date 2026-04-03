@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Praxis-Startseite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/dashboard.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="header-logo">&#9764;&#65039;</div>
+      <div>
+        <h1 class="header-title" id="praxisName">Praxis Dr. Florian Rasche</h1>
+        <p class="header-subtitle" id="praxisSubtitle">Facharzt fuer Allgemeinmedizin</p>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="clock" id="clock"></span>
+      <button class="theme-toggle" id="themeToggle" title="Tag/Nacht-Modus">&#9790;</button>
+      <a href="/admin.html" class="admin-link" title="Admin-Bereich">&#9881;&#65039;</a>
+    </div>
+  </header>
+
+  <!-- Main Layout -->
+  <div class="main-layout">
+
+    <!-- Left Sidebar: Links -->
+    <aside class="sidebar sidebar-left">
+      <h2 class="sidebar-title">Schnelllinks</h2>
+      <div id="linksContainer"></div>
+    </aside>
+
+    <!-- Center: Tiles -->
+    <main class="content">
+      <h2 class="section-title">Programme</h2>
+      <div class="tiles-grid" id="tilesContainer"></div>
+    </main>
+
+    <!-- Right Sidebar: Widgets -->
+    <aside class="sidebar sidebar-right">
+
+      <div class="widget" id="vacationWidget">
+        <h3 class="widget-title">&#127796; Urlaub</h3>
+        <div class="widget-body" id="vacationBody">Laden...</div>
+      </div>
+
+      <div class="widget" id="birthdayWidget">
+        <h3 class="widget-title">&#127874; Geburtstage</h3>
+        <div class="widget-body" id="birthdayBody">Laden...</div>
+      </div>
+
+      <div class="widget" id="coverageWidget">
+        <h3 class="widget-title">&#128100; Vertretungen</h3>
+        <div class="widget-body" id="coverageBody">Laden...</div>
+      </div>
+
+    </aside>
+  </div>
+
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+{
+  "vacations": [
+    { "id": "vac-1", "label": "Sommerurlaub", "startDate": "2026-08-01", "endDate": "2026-08-15" },
+    { "id": "vac-2", "label": "Weihnachtsferien", "startDate": "2026-12-23", "endDate": "2027-01-02" }
+  ]
+}

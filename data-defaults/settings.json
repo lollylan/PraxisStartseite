@@ -1,0 +1,8 @@
+{
+  "adminPasswordHash": "$2b$10$LyTs2S.l9TDF3YpQGgkyI.Hh.T4zaSmTH8Y26M1DsHrIfnuvQjQf2",
+  "defaultPassword": true,
+  "praxisName": "Praxis Dr. Florian Rasche",
+  "praxisSubtitle": "Facharzt fuer Allgemeinmedizin",
+  "serverPort": 7847,
+  "sessionSecret": "<auto-generiert>"
+}

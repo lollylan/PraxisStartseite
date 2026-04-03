@@ -1,0 +1,84 @@
+{
+  "tiles": [
+    {
+      "id": "tile-1",
+      "title": "Hausbesuchsplaner",
+      "subtitle": "VisiCore",
+      "icon": "\ud83c\udfe0",
+      "color": "#2563eb",
+      "url": "http://localhost:5001",
+      "type": "web",
+      "order": 1
+    },
+    {
+      "id": "tile-2",
+      "title": "QM / QNG",
+      "subtitle": "Qualitaetsmanagement",
+      "icon": "\ud83d\udccb",
+      "color": "#059669",
+      "url": "https://notion.so",
+      "type": "web",
+      "order": 2
+    },
+    {
+      "id": "tile-3",
+      "title": "Mitarbeiterplaner",
+      "subtitle": "HAEPPI-Flow",
+      "icon": "\ud83d\udc65",
+      "color": "#7c3aed",
+      "url": "http://localhost:3001",
+      "type": "web",
+      "order": 3
+    },
+    {
+      "id": "tile-4",
+      "title": "Praxis Bingo",
+      "subtitle": "Teamspiel",
+      "icon": "\ud83c\udfb2",
+      "color": "#dc2626",
+      "url": "http://localhost:3002",
+      "type": "web",
+      "order": 4
+    },
+    {
+      "id": "tile-5",
+      "title": "FaxFinity",
+      "subtitle": "Fax-Umbenenner",
+      "icon": "\ud83d\udce0",
+      "color": "#ca8a04",
+      "url": "http://localhost:3003",
+      "type": "web",
+      "order": 5
+    },
+    {
+      "id": "tile-6",
+      "title": "Zeittracker",
+      "subtitle": "Praxis Zeiterfassung",
+      "icon": "\u23f1\ufe0f",
+      "color": "#0891b2",
+      "url": "http://localhost:3004",
+      "type": "web",
+      "order": 6
+    },
+    {
+      "id": "tile-7",
+      "title": "DocMotion",
+      "subtitle": "Bewegungstracker",
+      "icon": "\ud83c\udfc3",
+      "color": "#16a34a",
+      "url": "http://localhost:3005",
+      "type": "web",
+      "order": 7
+    },
+    {
+      "id": "tile-8",
+      "title": "Medical Scribe",
+      "subtitle": "Asklaion",
+      "icon": "\ud83e\udda9",
+      "color": "#6366f1",
+      "url": "http://localhost:3006",
+      "type": "web",
+      "order": 8
+    }
+  ]
+}

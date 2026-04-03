@@ -1,0 +1,47 @@
+{
+  "categories": [
+    {
+      "id": "cat-1",
+      "name": "KVB / Abrechnung",
+      "icon": "\ud83c\udfe5",
+      "links": [
+        { "id": "link-1", "title": "KVB Portal", "url": "https://www.kvb.de", "newTab": true },
+        { "id": "link-2", "title": "KVB Mitgliederportal", "url": "https://www.kvb.de/mitglieder", "newTab": true }
+      ]
+    },
+    {
+      "id": "cat-2",
+      "name": "Verbaende",
+      "icon": "\ud83d\udcca",
+      "links": [
+        { "id": "link-3", "title": "Bayerischer Hausaerzteverband", "url": "https://www.hausaerzteverband.de", "newTab": true },
+        { "id": "link-4", "title": "BHAEV", "url": "https://www.hausaerzte-bayern.de", "newTab": true }
+      ]
+    },
+    {
+      "id": "cat-3",
+      "name": "Labor",
+      "icon": "\ud83e\uddea",
+      "links": [
+        { "id": "link-5", "title": "Labor Beispiel", "url": "https://www.labor-beispiel.de", "newTab": true }
+      ]
+    },
+    {
+      "id": "cat-4",
+      "name": "Krankenkassen",
+      "icon": "\ud83d\udcb3",
+      "links": [
+        { "id": "link-6", "title": "AOK Bayern", "url": "https://www.aok.de/bayern", "newTab": true },
+        { "id": "link-7", "title": "TK", "url": "https://www.tk.de", "newTab": true }
+      ]
+    },
+    {
+      "id": "cat-5",
+      "name": "Sonstiges",
+      "icon": "\ud83d\udd17",
+      "links": [
+        { "id": "link-8", "title": "Google", "url": "https://www.google.de", "newTab": true }
+      ]
+    }
+  ]
+}

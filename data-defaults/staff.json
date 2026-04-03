@@ -1,0 +1,7 @@
+{
+  "staff": [
+    { "id": "staff-1", "name": "Anna Mueller", "role": "MFA", "birthday": "1995-03-15" },
+    { "id": "staff-2", "name": "Lisa Schmidt", "role": "MFA", "birthday": "1990-07-22" },
+    { "id": "staff-3", "name": "Sarah Weber", "role": "VERAH", "birthday": "1988-11-03" }
+  ]
+}
