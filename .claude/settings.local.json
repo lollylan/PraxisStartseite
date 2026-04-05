@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s http://localhost:3000/api/settings/public)",
+      "Bash(curl -s http://localhost:3000/api/staff)",
+      "Bash(curl -s http://localhost:3000/api/vacations)",
+      "Bash(curl -s -X POST http://localhost:3000/api/auth/login -H \"Content-Type: application/json\" -d '{\"\"password\"\":\"\"praxis2026\"\"}' -c /tmp/cookies.txt)",
+      "Bash(curl -s http://localhost:3000/api/auth/status -b /tmp/cookies.txt)",
+      "Bash(curl -s -X POST http://localhost:3000/api/vacations -H \"Content-Type: application/json\" -b /tmp/cookies.txt -d '{\"\"\"\"label\"\"\"\":\"\"\"\"Osterurlaub\"\"\"\",\"\"\"\"startDate\"\"\"\":\"\"\"\"2026-04-10\"\"\"\",\"\"\"\"endDate\"\"\"\":\"\"\"\"2026-04-18\"\"\"\"}')",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(f''''{len\\(d[\"\"vacations\"\"]\\)} Urlaube gefunden''''\\)\")",
+      "Bash(curl -s -X DELETE http://localhost:3000/api/vacations/vac-28d3a19d -b /tmp/cookies.txt)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(taskkill //f //im node.exe)"
+    ]
+  }
+}

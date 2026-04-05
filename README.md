@@ -2,7 +2,7 @@
 
 Browser-Dashboard fuer die Praxis Dr. Florian Rasche — gedacht als Startseite auf allen Praxis-PCs.
 
-![Dashboard Dark Mode](docs/screenshot-dark.png)
+![Dashboard](public/assets/praxisstartseite.jpeg)
 
 ## Features
 
@@ -11,6 +11,8 @@ Browser-Dashboard fuer die Praxis Dr. Florian Rasche — gedacht als Startseite 
 **Programmkacheln** — Alle Praxis-Tools als grosse, uebersichtliche Kacheln in der Mitte. Ein Klick oeffnet die Anwendung.
 
 **Stimmungsbarometer** — MFAs koennen per Smiley (rot/gelb/gruen) ihre Stimmung erfassen, optional mit Kommentar. Inklusive Kalenderansicht mit Monatsstatistik und Tagesdetails.
+
+**Kanban-Board** — Aufgaben im Team organisieren mit Drag & Drop zwischen den Spalten (Idee, Geplant, In Umsetzung, Erledigt). Inline-Editing und Optimistic Locking fuer paralleles Arbeiten.
 
 **Urlaubs-Countdown** — Zeigt an, wie viele Tage bis zum naechsten Urlaub verbleiben oder ob gerade Urlaub ist.
 
