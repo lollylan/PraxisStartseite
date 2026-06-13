@@ -27,7 +27,7 @@ Browser-Dashboard fuer die Praxis Dr. Florian Rasche — gedacht als Startseite 
 - **Backend:** Node.js + Express
 - **Frontend:** Vanilla HTML/CSS/JS (kein Framework)
 - **Daten:** JSON-Dateien mit automatischem Backup-System
-- **Admin:** Passwortgeschuetzter Admin-Bereich zum Verwalten aller Inhalte
+- **Admin:** Passwortgeschuetzter Admin-Bereich zum Verwalten aller Inhalte (Standard-Passwort siehe unten)
 
 ## Installation
 
@@ -37,6 +37,12 @@ npm start
 ```
 
 Die Startseite ist dann erreichbar unter `http://localhost:7847`, der Admin-Bereich unter `http://localhost:7847/admin.html`.
+
+## Admin-Bereich & Passwort
+
+Der Admin-Bereich ist beim ersten Start mit dem **Standard-Passwort `admin`** gesichert.
+
+> ⚠️ **Wichtig:** Dieses Passwort ist nur fuer die Erstinbetriebnahme gedacht und muss nach der ersten Nutzung unbedingt geaendert werden. Das Aendern geht direkt im Admin-Bereich unter **Einstellungen → Passwort aendern**. Solange noch das Standard-Passwort aktiv ist, erscheint beim Login eine entsprechende Warnung.
 
 ## Lizenz
 
