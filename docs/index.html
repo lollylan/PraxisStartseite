@@ -6,9 +6,10 @@
   <title>Praxis-Startseite</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/dashboard.css">
+  <link rel="stylesheet" href="css/dashboard.css">
 </head>
 <body>
+  <div style="position:fixed;bottom:10px;left:10px;background:rgba(0,0,0,.7);color:#fff;padding:6px 12px;border-radius:8px;font-size:12px;z-index:999;">Demo mit Beispieldaten &mdash; <a href="https://github.com/lollylan/PraxisStartseite" style="color:#8fc7ff;" target="_blank" rel="noopener">Quellcode auf GitHub</a></div>
 
   <!-- Header -->
   <header class="header">
@@ -22,7 +23,7 @@
     <div class="header-right">
       <span class="clock" id="clock"></span>
       <button class="theme-toggle" id="themeToggle" title="Tag/Nacht-Modus">&#9790;</button>
-      <a href="/admin.html" class="admin-link" title="Admin-Bereich">&#9881;&#65039;</a>
+      <a href="https://github.com/lollylan/PraxisStartseite" class="admin-link" title="Quellcode auf GitHub" target="_blank" rel="noopener">&#128025;</a>
     </div>
   </header>
 
@@ -123,7 +124,7 @@
             <div class="mood-avg" id="moodAvg"></div>
             <div class="mood-count" id="moodCount"></div>
           </div>
-          <a href="/mood-stats.html" class="mood-stats-link">&#128202; Statistik anzeigen</a>
+          <a href="mood-stats.html" class="mood-stats-link">&#128202; Statistik anzeigen</a>
         </div>
       </div>
 
@@ -145,6 +146,7 @@
     </aside>
   </div>
 
-  <script src="/js/dashboard.js"></script>
+  <script src="js/demo-data.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 </html>

@@ -42,6 +42,7 @@
       <button class="tab" data-tab="staff">Geburtstage</button>
       <button class="tab" data-tab="vacations">Urlaub</button>
       <button class="tab" data-tab="coverage">Vertretungen</button>
+      <button class="tab" data-tab="jokes">Witze</button>
       <button class="tab" data-tab="settings">Einstellungen</button>
     </nav>
 
@@ -98,6 +99,30 @@
         <div id="coverageList" class="items-list"></div>
       </section>
 
+      <!-- Jokes Tab -->
+      <section id="tab-jokes" class="tab-pane">
+        <div class="settings-section">
+          <h3>Rotation</h3>
+          <form id="jokesConfigForm" class="settings-form">
+            <label>Intervall (Minuten) &mdash; wie oft neue Witze angezeigt werden
+              <input type="number" id="fJokeInterval" min="1" max="1440" value="10">
+            </label>
+            <label>Anzahl gleichzeitig angezeigter Witze
+              <input type="number" id="fJokeCount" min="1" max="10" value="3">
+            </label>
+            <button type="submit" class="btn-save">Speichern</button>
+            <p class="success" id="jokesConfigSuccess"></p>
+          </form>
+          <p class="settings-hint">Auf der Startseite kann mit dem Button &bdquo;Neue Witze&ldquo; jederzeit sofort ein frischer Satz Witze angezeigt werden.</p>
+        </div>
+        <div class="pane-header">
+          <h2>Witze verwalten</h2>
+          <button class="btn-add" onclick="Admin.showJokeForm()">+ Hinzufuegen</button>
+        </div>
+        <div id="jokeForm" class="edit-form" style="display:none;"></div>
+        <div id="jokesList" class="items-list"></div>
+      </section>
+
       <!-- Settings Tab -->
       <section id="tab-settings" class="tab-pane">
         <h2>Einstellungen</h2>
@@ -117,6 +142,11 @@
               <input type="checkbox" id="settKanbanEnabled">
             </label>
             <p class="settings-hint">Zeigt ein Kanban-Board unterhalb der Programm-Kacheln an (Idee, Geplant, In Umsetzung, Erledigt).</p>
+            <label class="toggle-label">
+              <span>Flachwitze anzeigen</span>
+              <input type="checkbox" id="settJokesEnabled">
+            </label>
+            <p class="settings-hint">Zeigt oben auf der Startseite eine Witze-Karte, die in einem einstellbaren Intervall neue Zufallswitze zeigt. Verwaltung im Tab &bdquo;Witze&ldquo;.</p>
           </div>
         </div>
         <div class="settings-section">

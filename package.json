@@ -1,12 +1,13 @@
 {
   "name": "praxis-startseite",
   "version": "1.0.0",
-  "description": "Browser-Startseite fuer die Praxis Dr. Florian Rasche",
+  "description": "Browser-Startseite fuer Arztpraxen",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:demo": "node scripts/build-demo.js"
   },
-  "author": "Praxis Dr. Florian Rasche",
+  "author": "lollylan",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^3.0.3",

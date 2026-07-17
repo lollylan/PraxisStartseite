@@ -58,6 +58,7 @@ const Admin = {
       Admin.loadStaff(),
       Admin.loadVacations(),
       Admin.loadCoverage(),
+      Admin.loadJokes(),
       Admin.loadSettings()
     ]);
   },
@@ -534,6 +535,86 @@ const Admin = {
   },
 
   // ============================
+  // JOKES / FLACHWITZE
+  // ============================
+  async loadJokes() {
+    const data = await Admin.api('/api/jokes');
+    // Fill config form
+    document.getElementById('fJokeInterval').value = data.intervalMinutes || 10;
+    document.getElementById('fJokeCount').value = data.count || 3;
+    // Render list
+    const list = document.getElementById('jokesList');
+    list.innerHTML = data.jokes.map((j, i) => `
+      <div class="item-row">
+        <div class="item-info">
+          <div class="item-title">${esc(j.text)}</div>
+          <div class="item-meta">Witz ${i + 1}</div>
+        </div>
+        <div class="item-actions">
+          <button class="btn-edit" onclick="Admin.showJokeForm('${j.id}')">Bearbeiten</button>
+          <button class="btn-delete" onclick="Admin.deleteJoke('${j.id}')">Loeschen</button>
+        </div>
+      </div>
+    `).join('');
+  },
+
+  async showJokeForm(id = null) {
+    Admin.editingId = id;
+    let joke = { text: '' };
+    if (id) {
+      const data = await Admin.api('/api/jokes');
+      joke = data.jokes.find(j => j.id === id) || joke;
+    }
+    const form = document.getElementById('jokeForm');
+    form.style.display = 'block';
+    form.innerHTML = `
+      <h3>${id ? 'Witz bearbeiten' : 'Neuer Witz'}</h3>
+      <div class="form-grid">
+        <div class="form-field full"><label>Text</label><textarea id="fJokeText" rows="3">${esc(joke.text)}</textarea></div>
+      </div>
+      <div class="form-actions">
+        <button class="btn-save" onclick="Admin.saveJoke()">Speichern</button>
+        <button class="btn-cancel" onclick="Admin.hideForm('jokeForm')">Abbrechen</button>
+      </div>
+    `;
+    form.scrollIntoView({ behavior: 'smooth' });
+  },
+
+  async saveJoke() {
+    const body = { text: document.getElementById('fJokeText').value.trim() };
+    if (!body.text) return alert('Text ist Pflichtfeld.');
+    if (Admin.editingId) {
+      await Admin.api(`/api/jokes/${Admin.editingId}`, 'PUT', body);
+    } else {
+      await Admin.api('/api/jokes', 'POST', body);
+    }
+    Admin.hideForm('jokeForm');
+    Admin.loadJokes();
+  },
+
+  async deleteJoke(id) {
+    if (!confirm('Witz wirklich loeschen?')) return;
+    await Admin.api(`/api/jokes/${id}`, 'DELETE');
+    Admin.loadJokes();
+  },
+
+  async saveJokesConfig(e) {
+    e.preventDefault();
+    const succEl = document.getElementById('jokesConfigSuccess');
+    succEl.textContent = '';
+    try {
+      await Admin.api('/api/jokes/config', 'PUT', {
+        intervalMinutes: parseInt(document.getElementById('fJokeInterval').value),
+        count: parseInt(document.getElementById('fJokeCount').value)
+      });
+      succEl.textContent = 'Gespeichert!';
+      setTimeout(() => { succEl.textContent = ''; }, 2000);
+    } catch (err) {
+      alert(err.message);
+    }
+  },
+
+  // ============================
   // SETTINGS
   // ============================
   async loadSettings() {
@@ -541,6 +622,7 @@ const Admin = {
     document.getElementById('settPraxisName').value = data.praxisName || '';
     document.getElementById('settPraxisSubtitle').value = data.praxisSubtitle || '';
     document.getElementById('settKanbanEnabled').checked = data.kanbanEnabled !== false;
+    document.getElementById('settJokesEnabled').checked = data.jokesEnabled !== false;
   },
 
   async saveSettings(e) {
@@ -548,7 +630,8 @@ const Admin = {
     await Admin.api('/api/settings', 'PUT', {
       praxisName: document.getElementById('settPraxisName').value,
       praxisSubtitle: document.getElementById('settPraxisSubtitle').value,
-      kanbanEnabled: document.getElementById('settKanbanEnabled').checked
+      kanbanEnabled: document.getElementById('settKanbanEnabled').checked,
+      jokesEnabled: document.getElementById('settJokesEnabled').checked
     });
     alert('Einstellungen gespeichert!');
   },
@@ -615,6 +698,7 @@ document.querySelectorAll('.tab').forEach(tab => {
 document.getElementById('loginForm').addEventListener('submit', Admin.login);
 document.getElementById('logoutBtn').addEventListener('click', Admin.logout);
 document.getElementById('settingsForm').addEventListener('submit', Admin.saveSettings);
+document.getElementById('jokesConfigForm').addEventListener('submit', Admin.saveJokesConfig);
 document.getElementById('passwordForm').addEventListener('submit', Admin.changePassword);
 
 // --- Init ---

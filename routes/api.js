@@ -112,7 +112,7 @@ router.post('/moods', (req, res) => {
 
 router.get('/settings/public', (req, res) => {
   const s = readJSON('settings.json');
-  res.json({ praxisName: s.praxisName, praxisSubtitle: s.praxisSubtitle, kanbanEnabled: s.kanbanEnabled !== false });
+  res.json({ praxisName: s.praxisName, praxisSubtitle: s.praxisSubtitle, kanbanEnabled: s.kanbanEnabled !== false, jokesEnabled: s.jokesEnabled !== false });
 });
 
 // ============================
@@ -310,7 +310,8 @@ router.get('/settings', requireAuth, (req, res) => {
     praxisSubtitle: s.praxisSubtitle,
     serverPort: s.serverPort,
     defaultPassword: !!s.defaultPassword,
-    kanbanEnabled: s.kanbanEnabled !== false
+    kanbanEnabled: s.kanbanEnabled !== false,
+    jokesEnabled: s.jokesEnabled !== false
   });
 });
 
@@ -319,6 +320,7 @@ router.put('/settings', requireAuth, (req, res) => {
   if (req.body.praxisName !== undefined) s.praxisName = req.body.praxisName;
   if (req.body.praxisSubtitle !== undefined) s.praxisSubtitle = req.body.praxisSubtitle;
   if (req.body.kanbanEnabled !== undefined) s.kanbanEnabled = !!req.body.kanbanEnabled;
+  if (req.body.jokesEnabled !== undefined) s.jokesEnabled = !!req.body.jokesEnabled;
   writeJSON('settings.json', s);
   res.json({ ok: true });
 });
@@ -417,6 +419,70 @@ router.delete('/kanban/cards/:id', (req, res) => {
   data.version++;
   writeJSON('kanban.json', data);
   res.json({ ok: true, version: data.version });
+});
+
+// ============================
+// JOKES / FLACHWITZE
+// ============================
+
+// Public read — jokes + rotation settings
+router.get('/jokes', (req, res) => {
+  res.json(readJSON('jokes.json'));
+});
+
+// Update rotation config (interval + count). Must be defined BEFORE '/jokes/:id'.
+router.put('/jokes/config', requireAuth, (req, res) => {
+  const data = readJSON('jokes.json');
+  const { intervalMinutes, count } = req.body;
+  if (intervalMinutes !== undefined) {
+    const iv = parseInt(intervalMinutes);
+    if (isNaN(iv) || iv < 1 || iv > 1440) {
+      return res.status(400).json({ error: 'Intervall muss zwischen 1 und 1440 Minuten liegen' });
+    }
+    data.intervalMinutes = iv;
+  }
+  if (count !== undefined) {
+    const c = parseInt(count);
+    if (isNaN(c) || c < 1 || c > 10) {
+      return res.status(400).json({ error: 'Anzahl muss zwischen 1 und 10 liegen' });
+    }
+    data.count = c;
+  }
+  writeJSON('jokes.json', data);
+  res.json({ intervalMinutes: data.intervalMinutes, count: data.count });
+});
+
+// Add a joke
+router.post('/jokes', requireAuth, (req, res) => {
+  const data = readJSON('jokes.json');
+  const text = typeof req.body.text === 'string' ? req.body.text.trim() : '';
+  if (!text) return res.status(400).json({ error: 'Text ist Pflichtfeld' });
+  const joke = { id: generateId('joke'), text: text.slice(0, 1000) };
+  data.jokes.push(joke);
+  writeJSON('jokes.json', data);
+  res.json(joke);
+});
+
+// Update a joke
+router.put('/jokes/:id', requireAuth, (req, res) => {
+  const data = readJSON('jokes.json');
+  const joke = data.jokes.find(j => j.id === req.params.id);
+  if (!joke) return res.status(404).json({ error: 'Nicht gefunden' });
+  const text = typeof req.body.text === 'string' ? req.body.text.trim() : '';
+  if (!text) return res.status(400).json({ error: 'Text ist Pflichtfeld' });
+  joke.text = text.slice(0, 1000);
+  writeJSON('jokes.json', data);
+  res.json(joke);
+});
+
+// Delete a joke
+router.delete('/jokes/:id', requireAuth, (req, res) => {
+  const data = readJSON('jokes.json');
+  const before = data.jokes.length;
+  data.jokes = data.jokes.filter(j => j.id !== req.params.id);
+  if (data.jokes.length === before) return res.status(404).json({ error: 'Nicht gefunden' });
+  writeJSON('jokes.json', data);
+  res.json({ ok: true });
 });
 
 module.exports = router;

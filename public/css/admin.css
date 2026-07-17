@@ -296,7 +296,7 @@ body {
   color: var(--text-muted);
 }
 
-.form-field input, .form-field select {
+.form-field input, .form-field select, .form-field textarea {
   padding: 8px 12px;
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -304,7 +304,12 @@ body {
   font-size: 0.9rem;
 }
 
-.form-field input:focus, .form-field select:focus {
+.form-field textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
   outline: none;
   border-color: var(--primary-light);
   box-shadow: 0 0 0 3px rgba(41, 128, 185, 0.15);
